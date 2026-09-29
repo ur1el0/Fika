@@ -21,6 +21,17 @@ final class DatingProfile {
     var isCurrentUser: Bool = false
     var createdAt: Date = Date()
     
+    var avatarImageName: String {
+        let lower = displayName.lowercased()
+        if lower.contains("kurt") { return "profile_kurt" }
+        if lower.contains("ron") { return "profile_ron" }
+        if lower.contains("mike") { return "profile_mike" }
+        if lower.contains("julian") { return "profile_julian" }
+        if lower.contains("maya") { return "profile_maya" }
+        if lower.contains("priya") { return "profile_priya" }
+        if lower.contains("elena") || lower.contains("roosc") || isCurrentUser { return "profile_elena" }
+        return ""
+    }
     
     // Explicit inverse cascade delete rule: deleting a profile cascades to its connections
     @Relationship(deleteRule: .cascade, inverse: \Connection.profile)

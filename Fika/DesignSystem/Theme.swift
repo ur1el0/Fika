@@ -99,6 +99,54 @@ enum Theme {
                     : UIColor(red: 0.91, green: 0.88, blue: 0.85, alpha: 1.0)
             }
         )
+        
+        // MARK: - Swiping & Dating Actions
+        /// Vibrant emerald for Like / Connect (Tinder / Bumble style)
+        static let swipeLike = Color(red: 0.05, green: 0.80, blue: 0.52)
+        /// Vibrant coral-red for Nope / Pass
+        static let swipeNope = Color(red: 1.00, green: 0.28, blue: 0.35)
+        /// Electric blue for Super Like
+        static let swipeSuperLike = Color(red: 0.08, green: 0.62, blue: 1.00)
+        /// Golden amber for Rewind / Undo
+        static let swipeRewind = Color(red: 1.00, green: 0.72, blue: 0.12)
+        /// Modern purple for Boost / Detail
+        static let swipeBoost = Color(red: 0.65, green: 0.35, blue: 0.95)
+    }
+    
+    // MARK: - Gradients
+    enum Gradients {
+        /// Tinder flame gradient
+        static let datingFlame = LinearGradient(
+            colors: [Color(red: 1.00, green: 0.27, blue: 0.35), Color(red: 1.00, green: 0.45, blue: 0.22)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        
+        /// Bumble honey gold gradient
+        static let bumbleGold = LinearGradient(
+            colors: [Color(red: 1.00, green: 0.78, blue: 0.16), Color(red: 1.00, green: 0.62, blue: 0.05)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        
+        /// FB Dating violet-rose gradient
+        static let fbDating = LinearGradient(
+            colors: [Color(red: 0.55, green: 0.20, blue: 0.88), Color(red: 0.95, green: 0.26, blue: 0.55)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        
+        /// Scrim for photo readability
+        static let cardOverlay = LinearGradient(
+            colors: [
+                Color.black.opacity(0.0),
+                Color.black.opacity(0.15),
+                Color.black.opacity(0.70),
+                Color.black.opacity(0.92)
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
     }
     
     // MARK: - Spacing Tokens

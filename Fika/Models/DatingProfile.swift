@@ -21,6 +21,7 @@ final class DatingProfile {
     var isCurrentUser: Bool = false
     var createdAt: Date = Date()
     
+    
     // Explicit inverse cascade delete rule: deleting a profile cascades to its connections
     @Relationship(deleteRule: .cascade, inverse: \Connection.profile)
     var connections: [Connection]? = []

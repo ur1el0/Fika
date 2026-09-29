@@ -104,7 +104,7 @@ final class DataSeeder {
                let kurt = fictional.first(where: { $0.displayName.contains("Kurt") }),
                let mike = fictional.first(where: { $0.displayName.contains("Mike") }) {
                 let conn1 = Connection(
-                    status: ConnectionStatus.mutualSpark.rawValue,
+                    status: ConnectionStatus.saved.rawValue,
                     createdAt: Date().addingTimeInterval(-86400 * 2),
                     profile: kurt
                 )
@@ -138,17 +138,6 @@ final class DataSeeder {
         let baseTime = Date(timeIntervalSince1970: 1700000000)
         let profiles = [
             DatingProfile(
-                displayName: "Ron Vincent Cada",
-                age: 26,
-                city: "Quezon Province",
-                bio: "Music lover and reader. I enjoy vinyl record hunting, art galleries, and peaceful evening walks.",
-                relationshipIntent: "Meaningful companionship",
-                interests: ["Jazz Vinyl", "Art Museum Crawls", "Acoustic Live Music", "Indie Bookstores"],
-                preferredFirstDateActivity: "Checking out vinyl records followed by a casual dinner.",
-                isCurrentUser: false,
-                createdAt: baseTime.addingTimeInterval(100)
-            ),
-            DatingProfile(
                 displayName: "Kurt Laja",
                 age: 25,
                 city: "Lucena City",
@@ -156,6 +145,17 @@ final class DataSeeder {
                 relationshipIntent: "Intentional dating",
                 interests: ["Specialty Coffee", "Analog Photography", "Indie Bookstores", "Trail Hiking"],
                 preferredFirstDateActivity: "Espresso tasting and visiting an indie bookstore.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(100)
+            ),
+            DatingProfile(
+                displayName: "Ron Vincent Cada",
+                age: 26,
+                city: "Quezon Province",
+                bio: "Music lover and reader. I enjoy vinyl record hunting, art galleries, and peaceful evening walks.",
+                relationshipIntent: "Meaningful companionship",
+                interests: ["Jazz Vinyl", "Art Museum Crawls", "Acoustic Live Music", "Indie Bookstores"],
+                preferredFirstDateActivity: "Checking out vinyl records followed by a casual dinner.",
                 isCurrentUser: false,
                 createdAt: baseTime.addingTimeInterval(200)
             ),

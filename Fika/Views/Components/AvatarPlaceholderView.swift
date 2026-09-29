@@ -52,10 +52,10 @@ struct AvatarPlaceholderView: View {
                 .frame(width: size, height: size)
                 .overlay(
                     Circle()
-                        .stroke(tintColor.opacity(0.3), lineWidth: 1.5)
+                        .stroke(tintColor.opacity(0.35), lineWidth: max(1.5, size * 0.03))
                 )
             
-            // Person initials or silhouette
+            // Person initials
             VStack(spacing: 0) {
                 Text(initials)
                     .font(.system(size: size * 0.38, weight: .bold, design: .serif))
@@ -68,14 +68,14 @@ struct AvatarPlaceholderView: View {
                     Circle()
                         .fill(Theme.Colors.cardBackground)
                         .frame(width: size * 0.34, height: size * 0.34)
-                    Image(systemName: "photo.fill")
-                        .font(.system(size: size * 0.16, weight: .semibold))
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: size * 0.20, weight: .medium))
                         .foregroundColor(Theme.Colors.secondaryText)
                 }
                 .offset(x: 2, y: 2)
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Profile photo placeholder for \(name)")
+        .accessibilityLabel("Profile placeholder for \(name)")
     }
 }

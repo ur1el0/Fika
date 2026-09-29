@@ -27,46 +27,49 @@ struct ProfileDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
+            VStack(alignment: .leading, spacing: 0) {
                 // Header Banner
                 headerSection
                 
-                // Feedback toast if any
-                if let message = feedbackMessage {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(Theme.Colors.sage)
-                        Text(message)
-                            .font(.footnote.weight(.medium))
-                            .foregroundColor(Theme.Colors.primaryText)
+                VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
+                    // Feedback toast if any
+                    if let message = feedbackMessage {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(Theme.Colors.sage)
+                            Text(message)
+                                .font(.footnote.weight(.medium))
+                                .foregroundColor(Theme.Colors.primaryText)
+                        }
+                        .padding(Theme.Spacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Theme.Colors.sage.opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.md, style: .continuous))
                     }
-                    .padding(Theme.Spacing.md)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Theme.Colors.sage.opacity(0.12))
-                    .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.md, style: .continuous))
+                    
+                    // Common Ground Alignment
+                    let reason = profile.commonGroundReason(with: currentUser)
+                    let sharedInterests = profile.sharedInterests(with: currentUser)
+                    CommonGroundReasonCard(reasonText: reason, sharedCount: sharedInterests.count)
+                    
+                    // Detailed Story & Bio
+                    biographySection
+                    
+                    // Preferred Date Activity
+                    firstDateSection
+                    
+                    // All Interests
+                    interestsSection
+                    
+                    // Connection Action Section
+                    if !profile.isCurrentUser {
+                        actionSection
+                    }
                 }
-                
-                // Common Ground Alignment
-                let reason = profile.commonGroundReason(with: currentUser)
-                let sharedInterests = profile.sharedInterests(with: currentUser)
-                CommonGroundReasonCard(reasonText: reason, sharedCount: sharedInterests.count)
-                
-                // Detailed Story & Bio
-                biographySection
-                
-                // Preferred Date Activity
-                firstDateSection
-                
-                // All Interests
-                interestsSection
-                
-                // Connection Action Section
-                if !profile.isCurrentUser {
-                    actionSection
-                }
+                .padding(.horizontal, Theme.Spacing.lg)
+                .padding(.top, Theme.Spacing.md)
+                .padding(.bottom, Theme.Spacing.xxl)
             }
-            .padding(.horizontal, Theme.Spacing.lg)
-            .padding(.vertical, Theme.Spacing.lg)
         }
         .background(Theme.Colors.background.ignoresSafeArea())
         .navigationTitle(profile.displayName)

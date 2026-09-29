@@ -78,8 +78,10 @@ struct ProfileCardView: View {
     
     private var cardBody: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.md) {
-            // Header row: Name, Age, City & Demo Badge
-            HStack(alignment: .firstTextBaseline) {
+            // Header row: Avatar, Name, Age, City & Demo Badge
+            HStack(alignment: .center, spacing: Theme.Spacing.md) {
+                AvatarPlaceholderView(name: profile.displayName, size: 54, showBadge: true)
+                
                 VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     HStack(spacing: Theme.Spacing.xs) {
                         Text(profile.displayName)

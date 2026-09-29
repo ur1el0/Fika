@@ -90,44 +90,50 @@ struct MyProfileView: View {
     // MARK: - Sections
     
     private func profileCard(user: DatingProfile) -> some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(user.displayName)
-                    .font(.largeTitle.weight(.semibold))
-                    .fontDesign(.serif)
-                    .foregroundColor(Theme.Colors.primaryText)
-                
-                Text("\(user.age)")
-                    .font(.title2)
-                    .foregroundColor(Theme.Colors.secondaryText)
-                
-                Spacer()
-                
-                Text("MY PROFILE")
-                    .font(.system(size: 9, weight: .bold))
-                    .tracking(1.0)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .foregroundColor(Theme.Colors.accentCoral)
-                    .background(Theme.Colors.accentSoft)
-                    .clipShape(Capsule())
-            }
+        HStack(alignment: .center, spacing: Theme.Spacing.md) {
+            AvatarPlaceholderView(name: user.displayName, size: 56, showBadge: true)
             
-            HStack(spacing: Theme.Spacing.sm) {
-                HStack(spacing: Theme.Spacing.xxs) {
-                    Image(systemName: "mappin.and.ellipse")
-                    Text(user.city)
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(alignment: .firstTextBaseline, spacing: Theme.Spacing.xs) {
+                    Text(user.displayName)
+                        .font(.title2.weight(.semibold))
+                        .fontDesign(.serif)
+                        .foregroundColor(Theme.Colors.primaryText)
+                        .minimumScaleFactor(0.85)
+                        .lineLimit(1)
+                    
+                    Text("\(user.age)")
+                        .font(.title3)
+                        .foregroundColor(Theme.Colors.secondaryText)
+                    
+                    Spacer()
+                    
+                    Text("MY PROFILE")
+                        .font(.system(size: 8, weight: .bold))
+                        .tracking(0.8)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 3)
+                        .foregroundColor(Theme.Colors.accentCoral)
+                        .background(Theme.Colors.accentSoft)
+                        .clipShape(Capsule())
                 }
                 
-                Text("•")
-                
-                HStack(spacing: Theme.Spacing.xxs) {
-                    Image(systemName: "heart.text.square")
-                    Text(user.relationshipIntent)
+                HStack(spacing: Theme.Spacing.xs) {
+                    HStack(spacing: Theme.Spacing.xxs) {
+                        Image(systemName: "mappin.and.ellipse")
+                        Text(user.city)
+                    }
+                    
+                    Text("•")
+                    
+                    HStack(spacing: Theme.Spacing.xxs) {
+                        Image(systemName: "heart.text.square")
+                        Text(user.relationshipIntent)
+                    }
                 }
+                .font(.footnote)
+                .foregroundColor(Theme.Colors.secondaryText)
             }
-            .font(.footnote)
-            .foregroundColor(Theme.Colors.secondaryText)
         }
         .padding(Theme.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -47,12 +47,15 @@ final class DataSeeder {
         
         do {
             let existing = try context.fetch(descriptor)
-            guard existing.isEmpty else {
-                return // Already seeded; avoid duplicate creation
+            let hasNewProfiles = existing.contains(where: { $0.displayName == "Kurt Laja" })
+            if existing.isEmpty || !hasNewProfiles {
+                // Delete old outdated fictional profiles if any
+                for old in existing {
+                    context.delete(old)
+                }
+                insertFictionalProfiles(context: context)
+                try context.save()
             }
-            
-            insertFictionalProfiles(context: context)
-            try context.save()
         } catch {
             print("Failed to check or seed fictional profiles: \(error.localizedDescription)")
         }
@@ -86,7 +89,10 @@ final class DataSeeder {
                 predicate: #Predicate<DatingProfile> { !$0.isCurrentUser }
             )
             var fictional = try context.fetch(profilesDesc)
-            if fictional.isEmpty {
+            if fictional.isEmpty || !fictional.contains(where: { $0.displayName == "Ron Vincent Cada" }) {
+                for old in fictional {
+                    context.delete(old)
+                }
                 insertFictionalProfiles(context: context)
                 try context.save()
                 fictional = try context.fetch(profilesDesc)
@@ -94,26 +100,27 @@ final class DataSeeder {
             
             let connDesc = FetchDescriptor<Connection>()
             let existingConns = try context.fetch(connDesc)
-            if existingConns.isEmpty, let julian = fictional.first(where: { $0.displayName.contains("Julian") }),
-               let maya = fictional.first(where: { $0.displayName.contains("Maya") }) {
+            if existingConns.isEmpty,
+               let kurt = fictional.first(where: { $0.displayName.contains("Kurt") }),
+               let mike = fictional.first(where: { $0.displayName.contains("Mike") }) {
                 let conn1 = Connection(
                     status: ConnectionStatus.mutualSpark.rawValue,
                     createdAt: Date().addingTimeInterval(-86400 * 2),
-                    profile: julian
+                    profile: kurt
                 )
                 let conn2 = Connection(
                     status: ConnectionStatus.planningDate.rawValue,
                     createdAt: Date().addingTimeInterval(-86400),
-                    profile: maya
+                    profile: mike
                 )
                 context.insert(conn1)
                 context.insert(conn2)
                 
                 let plan1 = DatePlan(
-                    activity: "Conservatory Stroll & Herbal Tea",
-                    venue: "Volunteer Park Conservatory",
+                    activity: "Board Games & Pour-Over",
+                    venue: "The Daily Grind Cafe",
                     scheduledAt: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
-                    notes: "Meeting by the palm house entrance at 2 PM.",
+                    notes: "Meeting at the corner table by 3 PM.",
                     status: DatePlanStatus.confirmed.rawValue,
                     connection: conn2
                 )
@@ -126,88 +133,75 @@ final class DataSeeder {
         }
     }
     
-    /// Inserts the standard set of 8 fictional demo profiles.
+    /// Inserts the standard set of fictional demo profiles.
     static func insertFictionalProfiles(context: ModelContext) {
+        let baseTime = Date(timeIntervalSince1970: 1700000000)
         let profiles = [
+            DatingProfile(
+                displayName: "Ron Vincent Cada",
+                age: 26,
+                city: "Quezon Province",
+                bio: "Music lover and reader. I enjoy vinyl record hunting, art galleries, and peaceful evening walks.",
+                relationshipIntent: "Meaningful companionship",
+                interests: ["Jazz Vinyl", "Art Museum Crawls", "Acoustic Live Music", "Indie Bookstores"],
+                preferredFirstDateActivity: "Checking out vinyl records followed by a casual dinner.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(100)
+            ),
+            DatingProfile(
+                displayName: "Kurt Laja",
+                age: 25,
+                city: "Lucena City",
+                bio: "Coffee enthusiast and photographer. Love quiet cafe mornings, 35mm film, and weekend trail runs.",
+                relationshipIntent: "Intentional dating",
+                interests: ["Specialty Coffee", "Analog Photography", "Indie Bookstores", "Trail Hiking"],
+                preferredFirstDateActivity: "Espresso tasting and visiting an indie bookstore.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(200)
+            ),
+            DatingProfile(
+                displayName: "Mike Andrei Gomez",
+                age: 24,
+                city: "Tayabas City",
+                bio: "Tech student and cyclist. Big fan of board game nights, good comfort food, and acoustic music.",
+                relationshipIntent: "Long-term partnership",
+                interests: ["Board Game Nights", "Acoustic Live Music", "Home Cooking", "Specialty Coffee"],
+                preferredFirstDateActivity: "Playing casual board games over iced coffee.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(300)
+            ),
             DatingProfile(
                 displayName: "Julian Thorne",
                 age: 27,
                 city: "Portland, OR",
-                bio: "Architectural restorer and 35mm film photographer. Weekend mornings are for estate sales, medium-format prints, and finding old jazz records.",
+                bio: "Architectural designer. Spends weekends sketching historic buildings and finding vintage prints.",
                 relationshipIntent: "Long-term partnership",
-                interests: ["Analog Photography", "Specialty Coffee", "Mid-Century Design", "Indie Bookstores", "Jazz Vinyl"],
-                preferredFirstDateActivity: "Espresso tasting followed by wandering an antiquarian bookshop.",
-                isCurrentUser: false
+                interests: ["Mid-Century Design", "Analog Photography", "Specialty Coffee"],
+                preferredFirstDateActivity: "Exploring historic architecture and grabbing pour-over coffee.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(400)
             ),
             DatingProfile(
                 displayName: "Maya Lin-Chen",
                 age: 26,
                 city: "Seattle, WA",
-                bio: "Landscape architect fascinated by native mosses, urban greenhouses, and slow sourdough baking. I love quiet walks in drizzly weather.",
+                bio: "Greenhouse tender and baker. Enjoys coastal nature walks and baking sourdough bread.",
                 relationshipIntent: "Intentional dating",
-                interests: ["Botanical Gardens", "Home Cooking", "Trail Hiking", "Indie Bookstores", "Pottery & Ceramics"],
-                preferredFirstDateActivity: "A slow stroll through the local conservatory and fresh herbal tea.",
-                isCurrentUser: false
-            ),
-            DatingProfile(
-                displayName: "Soren Lindqvist",
-                age: 31,
-                city: "Minneapolis, MN",
-                bio: "High school literature teacher and cyclist. When not grading essays on existentialism, I'm roasting Nordic light roasts or playing acoustic folk.",
-                relationshipIntent: "Long-term partnership",
-                interests: ["Specialty Coffee", "Acoustic Live Music", "Bouldering", "Independent Cinema", "Board Game Nights"],
-                preferredFirstDateActivity: "Pour-over at a quiet neighborhood cafe, sharing favorite passages from books.",
-                isCurrentUser: false
+                interests: ["Botanical Gardens", "Home Cooking", "Pottery & Ceramics", "Trail Hiking"],
+                preferredFirstDateActivity: "A slow stroll through a botanical greenhouse and herbal tea.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(500)
             ),
             DatingProfile(
                 displayName: "Priya Patel",
-                age: 29,
-                city: "Chicago, IL",
-                bio: "Museum archivist and ceramicist. Drawn to ancient textile history, slow wheel throwing, and picking up heirloom tomatoes at the farmers market.",
-                relationshipIntent: "Meaningful companionship",
-                interests: ["Art Museum Crawls", "Pottery & Ceramics", "Home Cooking", "Botanical Gardens", "Analog Photography"],
-                preferredFirstDateActivity: "Visiting a quiet ceramics studio gallery followed by handmade pasta.",
-                isCurrentUser: false
-            ),
-            DatingProfile(
-                displayName: "Leo Vance",
                 age: 28,
-                city: "Denver, CO",
-                bio: "Sound designer for indie games. Warm analog synthesizers, bouldering problems, and baking cardamom buns on crisp Sunday mornings.",
+                city: "Chicago, IL",
+                bio: "Museum archivist. Passionate about pottery throwing, textile crafts, and farmer's markets.",
                 relationshipIntent: "Intentional dating",
-                interests: ["Jazz Vinyl", "Bouldering", "Specialty Coffee", "Board Game Nights", "Trail Hiking"],
-                preferredFirstDateActivity: "Browsing crate records at an independent vinyl shop and grabbing warm cider.",
-                isCurrentUser: false
-            ),
-            DatingProfile(
-                displayName: "Clara Moreau",
-                age: 30,
-                city: "San Francisco, CA",
-                bio: "Documentary editor and printmaker. Coastal trails, Japanese woodblock prints, and long conversations that make you completely forget the time.",
-                relationshipIntent: "Long-term partnership",
-                interests: ["Independent Cinema", "Art Museum Crawls", "Trail Hiking", "Analog Photography", "Indie Bookstores"],
-                preferredFirstDateActivity: "Browsing photography monographs at an indie press shop, then watching the fog roll in.",
-                isCurrentUser: false
-            ),
-            DatingProfile(
-                displayName: "Marcus Kim",
-                age: 32,
-                city: "Austin, TX",
-                bio: "Urban planner with an affection for walkable avenues, mid-century furniture restoration, and fingerstyle acoustic guitar on the porch.",
-                relationshipIntent: "Marriage-minded",
-                interests: ["Acoustic Live Music", "Mid-Century Design", "Specialty Coffee", "Home Cooking", "Board Game Nights"],
-                preferredFirstDateActivity: "Walking through a historic neighborhood listening to acoustic live music.",
-                isCurrentUser: false
-            ),
-            DatingProfile(
-                displayName: "Ananya Sen",
-                age: 27,
-                city: "Brooklyn, NY",
-                bio: "Botanical illustrator and poetry press editor. Cozy evenings with genmaicha tea, quiet parallel reading, and jazz on low volume.",
-                relationshipIntent: "Intentional dating",
-                interests: ["Botanical Gardens", "Jazz Vinyl", "Indie Bookstores", "Art Museum Crawls", "Pottery & Ceramics"],
-                preferredFirstDateActivity: "Sketching plants at the botanical garden conservatory followed by matcha.",
-                isCurrentUser: false
+                interests: ["Art Museum Crawls", "Pottery & Ceramics", "Botanical Gardens"],
+                preferredFirstDateActivity: "Browsing a ceramics exhibition followed by fresh pasta.",
+                isCurrentUser: false,
+                createdAt: baseTime.addingTimeInterval(600)
             )
         ]
         

@@ -81,39 +81,45 @@ struct ProfileDetailView: View {
     // MARK: - Sections
     
     private var headerSection: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(profile.displayName)
-                    .font(.largeTitle.weight(.semibold))
-                    .fontDesign(.serif)
-                    .foregroundColor(Theme.Colors.primaryText)
-                
-                Text("\(profile.age)")
-                    .font(.title2)
-                    .foregroundColor(Theme.Colors.secondaryText)
-                
-                Spacer()
-                
-                if let conn = existingConnection {
-                    ConnectionStatusBadge(status: conn.typedStatus)
-                }
-            }
+        HStack(alignment: .center, spacing: Theme.Spacing.md) {
+            AvatarPlaceholderView(name: profile.displayName, size: 68, showBadge: true)
             
-            HStack(spacing: Theme.Spacing.sm) {
-                HStack(spacing: Theme.Spacing.xxs) {
-                    Image(systemName: "mappin.and.ellipse")
-                    Text(profile.city)
+            VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(profile.displayName)
+                        .font(.title.weight(.semibold))
+                        .fontDesign(.serif)
+                        .foregroundColor(Theme.Colors.primaryText)
+                        .minimumScaleFactor(0.85)
+                        .lineLimit(1)
+                    
+                    Text("\(profile.age)")
+                        .font(.title2)
+                        .foregroundColor(Theme.Colors.secondaryText)
+                    
+                    Spacer()
+                    
+                    if let conn = existingConnection {
+                        ConnectionStatusBadge(status: conn.typedStatus)
+                    }
                 }
                 
-                Text("•")
-                
-                HStack(spacing: Theme.Spacing.xxs) {
-                    Image(systemName: "heart.text.square")
-                    Text(profile.relationshipIntent)
+                HStack(spacing: Theme.Spacing.sm) {
+                    HStack(spacing: Theme.Spacing.xxs) {
+                        Image(systemName: "mappin.and.ellipse")
+                        Text(profile.city)
+                    }
+                    
+                    Text("•")
+                    
+                    HStack(spacing: Theme.Spacing.xxs) {
+                        Image(systemName: "heart.text.square")
+                        Text(profile.relationshipIntent)
+                    }
                 }
+                .font(.footnote)
+                .foregroundColor(Theme.Colors.secondaryText)
             }
-            .font(.footnote)
-            .foregroundColor(Theme.Colors.secondaryText)
         }
     }
     

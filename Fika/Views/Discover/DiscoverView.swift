@@ -15,7 +15,7 @@ struct DiscoverView: View {
     @Query(filter: #Predicate<DatingProfile> { $0.isCurrentUser })
     private var currentUserList: [DatingProfile]
     
-    @Query(filter: #Predicate<DatingProfile> { !$0.isCurrentUser }, sort: \.displayName)
+    @Query(filter: #Predicate<DatingProfile> { !$0.isCurrentUser }, sort: \.createdAt, order: .forward)
     private var allFictionalProfiles: [DatingProfile]
     
     @Query

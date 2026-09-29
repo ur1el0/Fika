@@ -151,16 +151,12 @@ struct ConnectionsListView: View {
     
     private func connectionRow(connection: Connection) -> some View {
         HStack(alignment: .center, spacing: Theme.Spacing.md) {
-            // Status Icon circle
-            ZStack {
-                Circle()
-                    .fill(Theme.Colors.secondaryCardBackground)
-                    .frame(width: 44, height: 44)
-                Image(systemName: connection.typedStatus.iconName)
-                    .foregroundColor(Theme.Colors.accentCoral)
-                    .font(.headline)
-            }
-            .accessibilityHidden(true)
+            // Profile avatar placeholder
+            AvatarPlaceholderView(
+                name: connection.profile?.displayName ?? "Connection",
+                size: 46,
+                showBadge: false
+            )
             
             VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                 HStack(alignment: .firstTextBaseline) {
